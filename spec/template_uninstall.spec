@@ -1,10 +1,9 @@
 #!/bin/bash
 
-service consul-template stop > /dev/null 2>&1
-chkconfig --del consul-template > /dev/null 2>&1
-
-rm -rf /var/consul-template > /dev/null 2>&1
-rm -rf /etc/consul-template > /dev/null 2>&1
-rm -f /etc/init.d/consul-template > /dev/null 2>&1
-
-userdel -r consul-template > /dev/null 2>&1
+PATH=/usr/bin:/bin:/sbin:/usr/sbin
+# if this is a full remove (not an upgrade),
+# remove the user and config files
+if [[ $1 -eq 0 ]]; then
+    userdel -r consul-template > /dev/null 2>&1
+    rm -rf /var/local/consul-template/conf
+fi

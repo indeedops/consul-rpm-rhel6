@@ -1,11 +1,6 @@
 #!/bin/bash
-
+PATH=/usr/bin:/bin:/sbin:/usr/sbin
 chmod +x /usr/local/bin/consul-template
-chmod +x /etc/init.d/consul-template
-
-mkdir -p /var/consul-template > /dev/null 2>&1
-
-useradd -M consul-template > /dev/null 2>&1
-chown consul:consul /var/consul-template/ > /dev/null 2>&1
-
-chkconfig --add consul-template > /dev/null 2>&1
+useradd -u 1937 -s /sbin/nologin -M consul-template &>/dev/null
+mkdir -p /var/local/consul-template/conf
+chown consul-template:consul-template /var/local/consul-template/conf
