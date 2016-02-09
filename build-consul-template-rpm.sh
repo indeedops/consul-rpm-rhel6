@@ -14,13 +14,20 @@ if [[ -z "$2" ]]; then
 else
   ARCH=$2
 fi
-#https://github.com/hashicorp/consul-template/releases/download/v0.2.0/consul-template_0.2.0_linux_amd64.tar.gz
+
+if [[ -z "$3" ]]; then
+  EXTRA_VERSION=""
+else
+  EXTRA_VERSION="--iteration $3"
+fi
+
+# https://releases.hashicorp.com/consul-template/0.12.2/consul-template_0.12.2_linux_amd64.zip
 case "${ARCH}" in
     i386)
-        ZIP=${NAME}_${VERSION}_linux_386.tar.gz
+        ZIP=${NAME}_${VERSION}_linux_386.zip
         ;;
     x86_64)
-       ZIP=${NAME}_${VERSION}_linux_amd64.tar.gz
+       ZIP=${NAME}_${VERSION}_linux_amd64.zip
         ;;
     *)
         echo $"Unknown architecture ${ARCH}" >&2
@@ -28,9 +35,10 @@ case "${ARCH}" in
         ;;
 esac
 
-URL="https://github.com/hashicorp/${NAME}/releases/download/v${VERSION}/${ZIP}"
+URL="https://releases.hashicorp.com/${NAME}/${VERSION}/${ZIP}"
 echo $"Creating ${NAME} RPM build file version ${VERSION}"
 
+echo "Downloading $URL"
 # fetching consul
 curl -k -L -o $ZIP $URL || {
     echo $"URL or version not found!" >&2
@@ -52,6 +60,7 @@ rm ${ZIP}
 fpm -s dir -t rpm -f \
        -C target -n ${NAME} \
        -v ${VERSION} \
+       ${EXTRA_VERSION} \
        -p target \
        -d "consul" \
        --after-install spec/template_install.spec \
