@@ -53,7 +53,7 @@ mkdir -p target/usr/local/bin/
 cp -r sources/${NAME}/etc/ target/
 
 # unzip
-tar -xf ${ZIP} -O > target/usr/local/bin/${NAME}
+unzip -qq ${ZIP} -d target/usr/local/bin/                                                                                                                                                    
 rm ${ZIP}
 
 # create rpm
@@ -68,6 +68,6 @@ fpm -s dir -t rpm -f \
        --rpm-ignore-iteration-in-dependencies \
        --description "Consul-template RPM package for RedHat Enterprise Linux 6" \
        --url "https://github.com/hypoport/consul-rpm-rhel6" \
-       usr/ etc/
+       usr/
 
 rm -rf target/etc target/usr
